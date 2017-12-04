@@ -31,10 +31,10 @@ abstract class AbstractForm
     abstract public function send();
 
     /**
-     * @param InterfaceFormValidation $validator
+     * @param FormValidator $validator
      * @return mixed
      */
-    abstract public function validation(InterfaceFormValidation $validator);
+    abstract public function validation(FormValidator $validator);
 
     /**
      * Получение шаблона для отправки
