@@ -8,7 +8,6 @@
 
 namespace Form;
 
-
 class Form extends AbstractForm
 {
     /**
@@ -21,19 +20,42 @@ class Form extends AbstractForm
         $this->to = $request['to'];
         $this->subject = $request['subject'];
         $this->message = $request['message'];
-        $this->from = $request['from'];
+        $this->template = '<p>%message%</p>';
     }
 
     public function send()
     {
-        mail($this->to, $this->subject, $this->message);
+        $validator = new Validator();
+        if ($this->validation($validator)) {
+            mail($this->to, $this->subject, $this->message);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function validation(Validator $validator)
     {
-        if (!$validator->validate()) {
-            return $this->error;
+        if (!$validator->validEmail($this->to)) {
+            $this->error[] = Validator::NOT_VALID_EMAIL;
         }
+
+        if ($validator->isEmpty(array($this->from, $this->to, $this->subject, $this->getTemplate()))) {
+            $this->error[] = Validator::FIELDS_VALUE_ERROR;
+        }
+
+        if (!$validator->validate($this->error)) {
+            return false;
+        }
+    }
+
+    public function getTemplate()
+    {
+        return strtr($this->template, array('%message%' => $this->message));
+    }
+
+    public function getError() {
+        return $this->error;
     }
 
 }

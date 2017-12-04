@@ -8,5 +8,9 @@
  */
 interface InterfaceFormValidation
 {
-    public function validate();
+    /**
+     * @param array $error
+     * @return mixed
+     */
+    public function validate($error);
 }
