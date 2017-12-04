@@ -10,7 +10,7 @@ namespace Form;
 
 use InterfaceFormValidation;
 
-class Validator implements InterfaceFormValidation
+class FormValidator implements InterfaceFormValidation
 {
     const NOT_VALID_EMAIL = "Неверный E-mail";
     const FIELDS_VALUE_ERROR = "Заполнены не все поля";
@@ -30,11 +30,19 @@ class Validator implements InterfaceFormValidation
         return false;
     }
 
+    /**
+     * @param $email
+     * @return int
+     */
     public function validEmail($email)
     {
-        return preg_match("/[-0-9a-zA-Z.+_]+@[-0-9a-zA-Z.+_]+.[a-zA-Z]{2,4}/", $email);
+        return preg_match('/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*))@(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})$/', $email);
     }
 
+    /**
+     * @param array $error
+     * @return bool
+     */
     public function validate($error)
     {
         if (count($error) > 0) {

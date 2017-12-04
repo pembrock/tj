@@ -1,13 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: pembrock
- * Date: 03.12.17
- * Time: 21:14
- */
 
 namespace Form;
 
+use InterfaceFormValidation;
 
 abstract class AbstractForm
 {
@@ -29,10 +24,27 @@ abstract class AbstractForm
     /** @var  array $error */
     public $error;
 
+    /**
+     * Отправка сообщения
+     * @return mixed
+     */
     abstract public function send();
 
-    /** @param object Validator $validator*/
-    abstract public function validation(Validator $validator);
+    /**
+     * @param InterfaceFormValidation $validator
+     * @return mixed
+     */
+    abstract public function validation(InterfaceFormValidation $validator);
 
+    /**
+     * Получение шаблона для отправки
+     * @return mixed
+     */
     abstract public function getTemplate();
+
+    /**
+     * Получение списка ошибок
+     * @return mixed
+     */
+    abstract public function getError();
 }

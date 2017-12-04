@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: k.pasikuta
- * Date: 04.12.2017
- * Time: 9:46
- */
 
 use Form\Form;
 

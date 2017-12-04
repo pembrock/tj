@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: pembrock
- * Date: 03.12.17
- * Time: 21:19
- */
 
 namespace Form;
 
@@ -20,42 +14,57 @@ class Form extends AbstractForm
         $this->to = $request['to'];
         $this->subject = $request['subject'];
         $this->message = $request['message'];
-        $this->template = '<p>%message%</p>';
+        $this->error = [];
     }
 
+    /**
+     * @return bool
+     */
     public function send()
     {
-        $validator = new Validator();
+        $validator = new FormValidator();
         if ($this->validation($validator)) {
-            mail($this->to, $this->subject, $this->message);
+            mail($this->to, $this->subject, $this->getTemplate());
             return true;
         } else {
             return false;
         }
     }
 
-    public function validation(Validator $validator)
+    /**
+     * @param FormValidator $validator
+     * @return bool
+     */
+    public function validation(FormValidator $validator)
     {
         if (!$validator->validEmail($this->to)) {
-            $this->error[] = Validator::NOT_VALID_EMAIL;
+            $this->error[] = FormValidator::NOT_VALID_EMAIL;
         }
 
-        if ($validator->isEmpty(array($this->from, $this->to, $this->subject, $this->getTemplate()))) {
-            $this->error[] = Validator::FIELDS_VALUE_ERROR;
+        if (!$validator->isEmpty([$this->from, $this->to, $this->subject, $this->message])) {
+            $this->error[] = FormValidator::FIELDS_VALUE_ERROR;
         }
 
         if (!$validator->validate($this->error)) {
             return false;
         }
+
+        return true;
     }
 
+    /**
+     * @return string
+     */
     public function getTemplate()
     {
+        $this->template = '<p>%message%</p>';
         return strtr($this->template, array('%message%' => $this->message));
     }
 
+    /**
+     * @return array
+     */
     public function getError() {
         return $this->error;
     }
-
 }
